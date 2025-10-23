@@ -1,1 +1,4 @@
 project_id = "ewgttimylpcniqpowugd"
+
+[functions.populate-eco-actions]
+verify_jwt = false

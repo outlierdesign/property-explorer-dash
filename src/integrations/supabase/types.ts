@@ -14,7 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      eco_actions: {
+        Row: {
+          category: string | null
+          created_at: string
+          description: string | null
+          detail_url: string | null
+          id: string
+          image_url: string | null
+          payment_rate: number | null
+          payment_unit: string | null
+          slug: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          detail_url?: string | null
+          id?: string
+          image_url?: string | null
+          payment_rate?: number | null
+          payment_unit?: string | null
+          slug: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string | null
+          created_at?: string
+          description?: string | null
+          detail_url?: string | null
+          id?: string
+          image_url?: string | null
+          payment_rate?: number | null
+          payment_unit?: string | null
+          slug?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
