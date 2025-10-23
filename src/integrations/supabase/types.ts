@@ -26,6 +26,7 @@ export type Database = {
           payment_unit: string | null
           slug: string
           title: string
+          type: string
           updated_at: string
         }
         Insert: {
@@ -39,6 +40,7 @@ export type Database = {
           payment_unit?: string | null
           slug: string
           title: string
+          type?: string
           updated_at?: string
         }
         Update: {
@@ -52,6 +54,7 @@ export type Database = {
           payment_unit?: string | null
           slug?: string
           title?: string
+          type?: string
           updated_at?: string
         }
         Relationships: []
