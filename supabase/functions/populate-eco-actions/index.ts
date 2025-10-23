@@ -72,30 +72,63 @@ serve(async (req) => {
     // Parse the HTML to extract action data
     const actions: EcoAction[] = [];
     
-    // Simple regex-based parsing of the structure we saw
-    const actionPattern = /##\s+(NPI\s+[^\n]+)\s+Payment Rate:\s*\n\s*([^\n]+)\s+\[Discover More\]\(([^)]+)\)/g;
-    const imagePattern = /!\[\]\(([^)]+)\)\s+##\s+(NPI\s+[^\n]+)/g;
+    // Match heading patterns with more flexibility
+    // Looking for h2/h3 tags with "NPI" in them
+    const headingPattern = /<h[23][^>]*>(NPI[^<]+)<\/h[23]>/gi;
+    const linkPattern = /<a[^>]+href="([^"]+)"[^>]*>Discover More<\/a>/gi;
+    const imagePattern = /<img[^>]+src="([^"]+)"[^>]*>/gi;
     
-    // First, collect images mapped to titles
-    const imageMap = new Map<string, string>();
-    let imageMatch;
-    while ((imageMatch = imagePattern.exec(html)) !== null) {
-      const imageUrl = imageMatch[1];
-      const title = imageMatch[2];
-      imageMap.set(title, imageUrl);
+    // Extract all headings
+    const headings: string[] = [];
+    let headingMatch;
+    while ((headingMatch = headingPattern.exec(html)) !== null) {
+      headings.push(headingMatch[1].trim());
     }
     
-    // Now parse actions
-    let match;
-    while ((match = actionPattern.exec(html)) !== null) {
-      const title = match[1].trim();
-      const paymentRateStr = match[2].trim();
-      const detailUrl = match[3];
+    // Extract all links - more flexible pattern
+    const links: string[] = [];
+    const linkPattern2 = /href="(https:\/\/acresireland\.ie\/action-projects\/[^"]+)"/gi;
+    let linkMatch;
+    while ((linkMatch = linkPattern2.exec(html)) !== null) {
+      links.push(linkMatch[1]);
+    }
+    
+    // Extract all images
+    const images: string[] = [];
+    let imageMatch;
+    while ((imageMatch = imagePattern.exec(html)) !== null) {
+      const src = imageMatch[1];
+      // Only include actual images, not icons/placeholders
+      if (src.includes('wp-content/uploads')) {
+        images.push(src);
+      }
+    }
+    
+    console.log(`Found ${headings.length} headings, ${links.length} links, ${images.length} images`);
+    
+    // Try to extract payment rates - more flexible pattern
+    // Looking for Euro amounts with forward slash
+    const paymentPattern2 = /€[\d,]+\.?\d*\s*\/\s*[a-zA-Z\s]+/gi;
+    const paymentRates: string[] = [];
+    let paymentMatch;
+    while ((paymentMatch = paymentPattern2.exec(html)) !== null) {
+      paymentRates.push(paymentMatch[0].trim());
+    }
+    
+    console.log(`Found ${paymentRates.length} payment rates`);
+    
+    // Match them up (assuming they appear in same order)
+    const minLength = Math.min(headings.length, paymentRates.length, links.length);
+    
+    for (let i = 0; i < minLength; i++) {
+      const title = headings[i];
+      const paymentRateStr = paymentRates[i];
+      const detailUrl = links[i];
+      const imageUrl = i < images.length ? images[i] : undefined;
       
       const { rate, unit } = parsePaymentRate(paymentRateStr);
       const category = extractCategory(title);
       const slug = createSlug(title);
-      const imageUrl = imageMap.get(title);
       
       actions.push({
         title,
@@ -108,7 +141,7 @@ serve(async (req) => {
       });
     }
     
-    console.log(`Found ${actions.length} actions`);
+    console.log(`Created ${actions.length} actions`);
     
     if (actions.length === 0) {
       return new Response(
