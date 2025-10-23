@@ -15,6 +15,32 @@ import {
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 
+// Import LA placeholder images
+import laCorncrakeHabitat from "@/assets/la-corncrake-habitat.jpg";
+import laFarmInfrastructure from "@/assets/la-farm-infrastructure.jpg";
+import laHeritageInfrastructure from "@/assets/la-heritage-infrastructure.jpg";
+import laInvasiveRemoval from "@/assets/la-invasive-removal.jpg";
+import laPredatorFence from "@/assets/la-predator-fence.jpg";
+import laRiparianPlanting from "@/assets/la-riparian-planting.jpg";
+import laScrubManagement from "@/assets/la-scrub-management.jpg";
+import laWaterManagement from "@/assets/la-water-management.jpg";
+import laWetlandHabitat from "@/assets/la-wetland-habitat.jpg";
+import laWildlifePond from "@/assets/la-wildlife-pond.jpg";
+
+// Map action slugs to their corresponding images
+const laImageMap: Record<string, string> = {
+  "la-corncrake-habitat-management": laCorncrakeHabitat,
+  "la-farm-infrastructure-biodiversity": laFarmInfrastructure,
+  "la-heritage-infrastructure-conservation": laHeritageInfrastructure,
+  "la-invasive-species-removal": laInvasiveRemoval,
+  "la-predator-proof-fencing": laPredatorFence,
+  "la-riparian-zone-planting": laRiparianPlanting,
+  "la-scrub-management-wildlife": laScrubManagement,
+  "la-water-management-systems": laWaterManagement,
+  "la-wetland-habitat-creation": laWetlandHabitat,
+  "la-wildlife-pond-construction": laWildlifePond,
+};
+
 interface EcoAction {
   id: string;
   title: string;
@@ -225,9 +251,9 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
                   className="group overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-elegant cursor-pointer h-full"
                 >
                   <div className="relative h-64 overflow-hidden">
-                    {action.image_url ? (
+                    {(action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
                       <img
-                        src={action.image_url}
+                        src={action.type === "LA" && laImageMap[action.slug] ? laImageMap[action.slug] : action.image_url!}
                         alt={action.title}
                         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                       />

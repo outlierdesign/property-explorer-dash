@@ -9,6 +9,32 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Footer } from "@/components/Footer";
 
+// Import LA placeholder images
+import laCorncrakeHabitat from "@/assets/la-corncrake-habitat.jpg";
+import laFarmInfrastructure from "@/assets/la-farm-infrastructure.jpg";
+import laHeritageInfrastructure from "@/assets/la-heritage-infrastructure.jpg";
+import laInvasiveRemoval from "@/assets/la-invasive-removal.jpg";
+import laPredatorFence from "@/assets/la-predator-fence.jpg";
+import laRiparianPlanting from "@/assets/la-riparian-planting.jpg";
+import laScrubManagement from "@/assets/la-scrub-management.jpg";
+import laWaterManagement from "@/assets/la-water-management.jpg";
+import laWetlandHabitat from "@/assets/la-wetland-habitat.jpg";
+import laWildlifePond from "@/assets/la-wildlife-pond.jpg";
+
+// Map action slugs to their corresponding images
+const laImageMap: Record<string, string> = {
+  "la-corncrake-habitat-management": laCorncrakeHabitat,
+  "la-farm-infrastructure-biodiversity": laFarmInfrastructure,
+  "la-heritage-infrastructure-conservation": laHeritageInfrastructure,
+  "la-invasive-species-removal": laInvasiveRemoval,
+  "la-predator-proof-fencing": laPredatorFence,
+  "la-riparian-zone-planting": laRiparianPlanting,
+  "la-scrub-management-wildlife": laScrubManagement,
+  "la-water-management-systems": laWaterManagement,
+  "la-wetland-habitat-creation": laWetlandHabitat,
+  "la-wildlife-pond-construction": laWildlifePond,
+};
+
 interface EcoAction {
   id: string;
   title: string;
@@ -19,6 +45,7 @@ interface EcoAction {
   category: string;
   image_url?: string;
   detail_url?: string;
+  type?: string;
 }
 
 const ActionDetail = () => {
@@ -135,9 +162,9 @@ const ActionDetail = () => {
             {/* Video/Image Section - Full Width */}
             <div className="mb-8 rounded-2xl overflow-hidden">
               <div className="relative aspect-[16/9] bg-gradient-to-br from-primary/20 to-secondary/20">
-                {action.image_url ? (
+                {(action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
                   <img 
-                    src={action.image_url} 
+                    src={action.type === "LA" && laImageMap[action.slug] ? laImageMap[action.slug] : action.image_url!} 
                     alt={action.title}
                     className="w-full h-full object-cover"
                   />
@@ -344,9 +371,9 @@ const ActionDetail = () => {
                   <Link to={`/action/${relatedAction.slug}`} key={relatedAction.id} className="group">
                     <Card className="overflow-hidden h-full border-2 hover:border-primary/50 hover:shadow-xl transition-all duration-300">
                       <div className="relative aspect-[4/3] bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
-                        {relatedAction.image_url ? (
+                        {(relatedAction.type === "LA" && laImageMap[relatedAction.slug]) || relatedAction.image_url ? (
                           <img 
-                            src={relatedAction.image_url} 
+                            src={relatedAction.type === "LA" && laImageMap[relatedAction.slug] ? laImageMap[relatedAction.slug] : relatedAction.image_url!} 
                             alt={relatedAction.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
                           />
