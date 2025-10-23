@@ -25,9 +25,14 @@ interface EcoAction {
   category: string | null;
   image_url: string | null;
   detail_url: string | null;
+  type: string;
 }
 
-export const EcoActionsExplorer = () => {
+interface EcoActionsExplorerProps {
+  streamType?: "NPI" | "LA";
+}
+
+export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerProps) => {
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [showFilters, setShowFilters] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
@@ -39,7 +44,7 @@ export const EcoActionsExplorer = () => {
 
   useEffect(() => {
     fetchActions();
-  }, []);
+  }, [streamType]);
 
   const fetchActions = async () => {
     try {
@@ -47,6 +52,7 @@ export const EcoActionsExplorer = () => {
       const { data, error } = await supabase
         .from('eco_actions')
         .select('*')
+        .eq('type', streamType)
         .order('category', { ascending: true })
         .order('title', { ascending: true });
 
@@ -120,10 +126,14 @@ export const EcoActionsExplorer = () => {
       <div className="container mx-auto px-4">
         {/* Header */}
         <div className="max-w-3xl mb-12">
-          <h2 className="text-4xl font-bold mb-4">Eco Actions Explorer</h2>
+          <h2 className="text-4xl font-bold mb-4">
+            {streamType === "NPI" ? "Non-Productive Investments" : "Landscape Actions"}
+          </h2>
           <p className="text-lg text-muted-foreground mb-6">
-            Discover environmental initiatives and Non-Productive Investments (NPIs) from the ACRES Ireland program. 
-            These actions support biodiversity, water quality, and sustainable farming practices.
+            {streamType === "NPI" 
+              ? "Discover environmental initiatives and Non-Productive Investments (NPIs) from the ACRES Ireland program. These actions support biodiversity, water quality, and sustainable farming practices."
+              : "Explore landscape-scale management actions that protect wildlife, control invasive species, restore habitats, and enhance your land's ecological value through targeted conservation activities."
+            }
           </p>
           <div className="flex gap-2">
             <Button 
