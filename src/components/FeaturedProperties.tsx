@@ -12,7 +12,7 @@ const properties = [
     rating: 4.9,
     reviews: 127,
     price: 245,
-    ecoFeatures: ["Solar Power", "Rainwater Harvest", "Zero Waste"],
+    ecoFeatures: ["Small Woodland", "Wild Bird Cover", "Solar Power"],
     featured: true,
   },
   {
@@ -23,7 +23,7 @@ const properties = [
     rating: 4.8,
     reviews: 94,
     price: 320,
-    ecoFeatures: ["Geothermal", "Organic Garden", "EV Charging"],
+    ecoFeatures: ["Riparian Buffer", "Native Hedgerows", "Geothermal"],
     featured: true,
   },
   {
@@ -34,7 +34,7 @@ const properties = [
     rating: 5.0,
     reviews: 156,
     price: 180,
-    ecoFeatures: ["Wind Energy", "Composting", "Local Food"],
+    ecoFeatures: ["Wild Bird Cover", "Traditional Orchard", "Wind Energy"],
     featured: false,
   },
   {
@@ -45,7 +45,7 @@ const properties = [
     rating: 4.9,
     reviews: 203,
     price: 275,
-    ecoFeatures: ["Carbon Neutral", "Wildlife Habitat", "Eco Materials"],
+    ecoFeatures: ["Small Woodland", "Wetland Habitat", "Carbon Neutral"],
     featured: false,
   },
   {
@@ -56,7 +56,7 @@ const properties = [
     rating: 4.7,
     reviews: 82,
     price: 290,
-    ecoFeatures: ["Hydropower", "Insulated Design", "Sustainable Fish"],
+    ecoFeatures: ["Riparian Buffer", "Native Hedgerows", "Hydropower"],
     featured: false,
   },
   {
@@ -67,7 +67,7 @@ const properties = [
     rating: 4.9,
     reviews: 145,
     price: 210,
-    ecoFeatures: ["Organic Farm", "Solar Panels", "Biodiversity"],
+    ecoFeatures: ["Traditional Orchard", "Native Hedgerows", "Solar Power"],
     featured: false,
   },
 ];
