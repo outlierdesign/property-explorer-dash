@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { Play, Filter, RefreshCw, Search } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -209,66 +210,64 @@ export const EcoActionsExplorer = () => {
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredActions.map((action) => (
-              <Card 
-                key={action.id} 
-                className="group overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-elegant"
-              >
-                <div className="relative h-64 overflow-hidden">
-                  {action.image_url ? (
-                    <img
-                      src={action.image_url}
-                      alt={action.title}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-muted flex items-center justify-center">
-                      <p className="text-muted-foreground">No image</p>
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-
-                  {/* Category Badge */}
-                  {action.category && (
-                    <Badge className="absolute top-4 right-4 bg-primary/90">
-                      {action.category}
-                    </Badge>
-                  )}
-
-                  {/* Title */}
-                  <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                    <h3 className="text-xl font-bold mb-2">{action.title}</h3>
-                    {action.description && (
-                      <p className="text-sm text-white/90 mb-1 line-clamp-2">{action.description}</p>
-                    )}
-                  </div>
-                </div>
-
-                <CardContent className="p-6">
-                  <div className="space-y-4">
-                    {action.payment_rate && (
-                      <div>
-                        <p className="text-sm font-medium text-muted-foreground mb-1">
-                          Payment Rate
-                        </p>
-                        <p className="text-lg font-semibold text-primary">
-                          €{action.payment_rate.toFixed(2)}
-                          {action.payment_unit && ` / ${action.payment_unit}`}
-                        </p>
+              <Link to={`/action/${action.slug}`} key={action.id}>
+                <Card 
+                  className="group overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-elegant cursor-pointer h-full"
+                >
+                  <div className="relative h-64 overflow-hidden">
+                    {action.image_url ? (
+                      <img
+                        src={action.image_url}
+                        alt={action.title}
+                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-muted flex items-center justify-center">
+                        <p className="text-muted-foreground">No image</p>
                       </div>
                     )}
-                    
-                    {action.detail_url && (
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+
+                    {/* Category Badge */}
+                    {action.category && (
+                      <Badge className="absolute top-4 right-4 bg-primary/90">
+                        {action.category}
+                      </Badge>
+                    )}
+
+                    {/* Title */}
+                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                      <h3 className="text-xl font-bold mb-2">{action.title}</h3>
+                      {action.description && (
+                        <p className="text-sm text-white/90 mb-1 line-clamp-2">{action.description}</p>
+                      )}
+                    </div>
+                  </div>
+
+                  <CardContent className="p-6">
+                    <div className="space-y-4">
+                      {action.payment_rate && (
+                        <div>
+                          <p className="text-sm font-medium text-muted-foreground mb-1">
+                            Payment Rate
+                          </p>
+                          <p className="text-lg font-semibold text-primary">
+                            €{action.payment_rate.toFixed(2)}
+                            {action.payment_unit && ` / ${action.payment_unit}`}
+                          </p>
+                        </div>
+                      )}
+                      
                       <Button 
                         variant="outline" 
                         className="w-full group-hover:bg-primary group-hover:text-white transition-colors"
-                        onClick={() => window.open(action.detail_url!, '_blank')}
                       >
                         Learn More
                       </Button>
-                    )}
-                  </div>
-                </CardContent>
-              </Card>
+                    </div>
+                  </CardContent>
+                </Card>
+              </Link>
             ))}
           </div>
         )}
