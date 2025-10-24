@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 export interface FavoriteAction {
+  instanceId: string;
   action: {
     id: string;
     title: string;
@@ -36,27 +37,27 @@ export const useFavorites = () => {
 
   const addToFavorites = (action: FavoriteAction['action'], quantities?: FavoriteAction['customQuantities']) => {
     const calculatedTotal = calculateTotal(action, quantities);
+    const instanceId = `${action.id}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
     
-    setFavorites(prev => {
-      const exists = prev.find(f => f.action.id === action.id);
-      if (exists) return prev;
-      
-      return [...prev, {
+    setFavorites(prev => [
+      ...prev, 
+      {
+        instanceId,
         action,
         addedAt: new Date().toISOString(),
         customQuantities: quantities,
         calculatedTotal
-      }];
-    });
+      }
+    ]);
   };
 
-  const removeFromFavorites = (actionId: string) => {
-    setFavorites(prev => prev.filter(f => f.action.id !== actionId));
+  const removeFromFavorites = (instanceId: string) => {
+    setFavorites(prev => prev.filter(f => f.instanceId !== instanceId));
   };
 
-  const updateQuantities = (actionId: string, quantities: FavoriteAction['customQuantities']) => {
+  const updateQuantities = (instanceId: string, quantities: FavoriteAction['customQuantities']) => {
     setFavorites(prev => prev.map(f => {
-      if (f.action.id === actionId) {
+      if (f.instanceId === instanceId) {
         const calculatedTotal = calculateTotal(f.action, quantities);
         return { ...f, customQuantities: quantities, calculatedTotal };
       }

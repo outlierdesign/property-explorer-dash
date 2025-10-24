@@ -22,26 +22,19 @@ interface FavoriteButtonProps {
 }
 
 export const FavoriteButton = ({ action, className }: FavoriteButtonProps) => {
-  const { isFavorited, addToFavorites, removeFromFavorites } = useFavorites();
+  const { isFavorited, addToFavorites } = useFavorites();
   const favorited = isFavorited(action.id);
 
   const handleClick = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
     
-    if (favorited) {
-      removeFromFavorites(action.id);
-      toast({
-        title: "Removed from shortlist",
-        description: `${action.title} has been removed.`
-      });
-    } else {
-      addToFavorites(action);
-      toast({
-        title: "Added to shortlist",
-        description: `${action.title} has been added.`
-      });
-    }
+    addToFavorites(action);
+    toast({
+      title: "Added to shortlist",
+      description: `${action.title} has been added.`,
+      duration: 1500
+    });
   };
 
   return (
@@ -50,13 +43,10 @@ export const FavoriteButton = ({ action, className }: FavoriteButtonProps) => {
       size="icon"
       onClick={handleClick}
       className={cn("hover:scale-110 transition-transform", className)}
-      aria-label={favorited ? "Remove from shortlist" : "Add to shortlist"}
+      aria-label="Add to shortlist"
     >
       <Heart 
-        className={cn(
-          "h-5 w-5 transition-colors",
-          favorited ? "fill-accent text-accent" : "text-muted-foreground"
-        )} 
+        className="h-5 w-5 transition-colors text-muted-foreground"
       />
     </Button>
   );

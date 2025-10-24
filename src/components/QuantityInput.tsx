@@ -4,31 +4,31 @@ import { Label } from "./ui/label";
 import { useFavorites } from "@/hooks/useFavorites";
 
 interface QuantityInputProps {
-  actionId: string;
+  instanceId: string;
   paymentRate: number;
   paymentUnit: string;
 }
 
-export const QuantityInput = ({ actionId, paymentRate, paymentUnit }: QuantityInputProps) => {
+export const QuantityInput = ({ instanceId, paymentRate, paymentUnit }: QuantityInputProps) => {
   const { favorites, updateQuantities } = useFavorites();
-  const favorite = favorites.find(f => f.action.id === actionId);
+  const favorite = favorites.find(f => f.instanceId === instanceId);
   const [meters, setMeters] = useState(favorite?.customQuantities?.meters || 0);
 
   useEffect(() => {
     if (meters > 0) {
-      updateQuantities(actionId, { meters });
+      updateQuantities(instanceId, { meters });
     }
-  }, [meters, actionId]);
+  }, [meters, instanceId]);
 
   const calculatedTotal = (paymentRate / 100) * meters;
 
   return (
     <div className="space-y-2 p-3 bg-muted/50 rounded-md">
-      <Label htmlFor={`meters-${actionId}`} className="text-sm font-medium">
+      <Label htmlFor={`meters-${instanceId}`} className="text-sm font-medium">
         Length (meters)
       </Label>
       <Input
-        id={`meters-${actionId}`}
+        id={`meters-${instanceId}`}
         type="number"
         min="0"
         step="1"

@@ -25,7 +25,8 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
       toast({
         title: "No actions selected",
         description: "Add some actions to your shortlist first.",
-        variant: "destructive"
+        variant: "destructive",
+        duration: 1500
       });
       return;
     }
@@ -33,7 +34,8 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
     generatePDF(favorites, totalEstimate);
     toast({
       title: "PDF Downloaded",
-      description: "Your action plan has been downloaded successfully."
+      description: "Your action plan has been downloaded successfully.",
+      duration: 1500
     });
   };
 
@@ -42,7 +44,8 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
       clearFavorites();
       toast({
         title: "Shortlist cleared",
-        description: "All actions have been removed."
+        description: "All actions have been removed.",
+        duration: 1500
       });
     }
   };
@@ -70,7 +73,7 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
             ) : (
               <div className="space-y-4 pb-4">
                 {favorites.map((favorite) => (
-                  <div key={favorite.action.id} className="border rounded-lg p-4 space-y-3 bg-card">
+                  <div key={favorite.instanceId} className="border rounded-lg p-4 space-y-3 bg-card">
                     <div className="flex items-start justify-between gap-3">
                       <div className="flex-1 space-y-1">
                         <h3 className="font-semibold text-base leading-tight">
@@ -85,7 +88,7 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
                       <Button
                         variant="ghost"
                         size="icon"
-                        onClick={() => removeFromFavorites(favorite.action.id)}
+                        onClick={() => removeFromFavorites(favorite.instanceId)}
                         className="shrink-0"
                       >
                         <X className="h-4 w-4" />
@@ -107,7 +110,7 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
 
                       {hasFencingComponent(favorite.action) && (
                         <QuantityInput
-                          actionId={favorite.action.id}
+                          instanceId={favorite.instanceId}
                           paymentRate={favorite.action.payment_rate || 0}
                           paymentUnit={favorite.action.payment_unit || "unit"}
                         />
