@@ -14,6 +14,7 @@ import {
 } from "@/components/ui/select";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
+import { VideoModal } from "./VideoModal";
 
 // Import LA placeholder images
 import laCorncrakeHabitat from "@/assets/la-corncrake-habitat.jpg";
@@ -67,6 +68,8 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
   const [categories, setCategories] = useState<string[]>(["All"]);
   const [isLoading, setIsLoading] = useState(true);
   const [isPopulating, setIsPopulating] = useState(false);
+  const [videoModalOpen, setVideoModalOpen] = useState(false);
+  const [selectedVideo, setSelectedVideo] = useState<{ url: string; title: string } | null>(null);
   const { toast } = useToast();
 
   useEffect(() => {
@@ -247,13 +250,20 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredActions.map((action) => (
-              <Link to={`/action/${action.slug}`} key={action.id}>
+              <div key={action.id}>
                 <Card 
-                  className="group overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-elegant cursor-pointer h-full"
+                  className="group overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-elegant h-full"
                 >
                   <div className="relative h-64 overflow-hidden">
                     {action.video_url ? (
-                      <>
+                      <div 
+                        className="relative w-full h-full cursor-pointer"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          setSelectedVideo({ url: action.video_url!, title: action.title });
+                          setVideoModalOpen(true);
+                        }}
+                      >
                         <iframe
                           src={action.video_url}
                           className="w-full h-full pointer-events-none"
@@ -266,60 +276,66 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
                             <Play className="h-8 w-8 text-primary" fill="currentColor" />
                           </div>
                         </div>
-                      </>
-                    ) : (action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
-                      <img
-                        src={action.type === "LA" && laImageMap[action.slug] ? laImageMap[action.slug] : action.image_url!}
-                        alt={action.title}
-                        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                      />
-                    ) : (
-                      <div className="w-full h-full bg-muted flex items-center justify-center">
-                        <p className="text-muted-foreground">No image</p>
                       </div>
+                    ) : (action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
+                      <Link to={`/action/${action.slug}`}>
+                        <img
+                          src={action.type === "LA" && laImageMap[action.slug] ? laImageMap[action.slug] : action.image_url!}
+                          alt={action.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                        />
+                      </Link>
+                    ) : (
+                      <Link to={`/action/${action.slug}`}>
+                        <div className="w-full h-full bg-muted flex items-center justify-center">
+                          <p className="text-muted-foreground">No image</p>
+                        </div>
+                      </Link>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
 
                     {/* Category Badge */}
                     {action.category && (
-                      <Badge className="absolute top-4 right-4 bg-primary/90">
+                      <Badge className="absolute top-4 right-4 bg-primary/90 pointer-events-none">
                         {action.category}
                       </Badge>
                     )}
 
                     {/* Title */}
-                    <div className="absolute bottom-0 left-0 right-0 p-6 text-white">
+                    <Link to={`/action/${action.slug}`} className="absolute bottom-0 left-0 right-0 p-6 text-white">
                       <h3 className="text-xl font-bold mb-2">{action.title}</h3>
                       {action.description && (
                         <p className="text-sm text-white/90 mb-1 line-clamp-2">{action.description}</p>
                       )}
-                    </div>
+                    </Link>
                   </div>
 
-                  <CardContent className="p-6">
-                    <div className="space-y-4">
-                      {action.payment_rate && (
-                        <div>
-                          <p className="text-sm font-medium text-muted-foreground mb-1">
-                            Payment Rate
-                          </p>
-                          <p className="text-lg font-semibold text-primary">
-                            €{action.payment_rate.toFixed(2)}
-                            {action.payment_unit && ` / ${action.payment_unit}`}
-                          </p>
-                        </div>
-                      )}
-                      
-                      <Button 
-                        variant="outline" 
-                        className="w-full group-hover:bg-primary group-hover:text-white transition-colors"
-                      >
-                        Learn More
-                      </Button>
-                    </div>
-                  </CardContent>
+                  <Link to={`/action/${action.slug}`}>
+                    <CardContent className="p-6">
+                      <div className="space-y-4">
+                        {action.payment_rate && (
+                          <div>
+                            <p className="text-sm font-medium text-muted-foreground mb-1">
+                              Payment Rate
+                            </p>
+                            <p className="text-lg font-semibold text-primary">
+                              €{action.payment_rate.toFixed(2)}
+                              {action.payment_unit && ` / ${action.payment_unit}`}
+                            </p>
+                          </div>
+                        )}
+                        
+                        <Button 
+                          variant="outline" 
+                          className="w-full group-hover:bg-primary group-hover:text-white transition-colors"
+                        >
+                          Learn More
+                        </Button>
+                      </div>
+                    </CardContent>
+                  </Link>
                 </Card>
-              </Link>
+              </div>
             ))}
           </div>
         )}
@@ -332,6 +348,18 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
           </div>
         )}
       </div>
+
+      {selectedVideo && (
+        <VideoModal
+          isOpen={videoModalOpen}
+          onClose={() => {
+            setVideoModalOpen(false);
+            setSelectedVideo(null);
+          }}
+          videoUrl={selectedVideo.url}
+          title={selectedVideo.title}
+        />
+      )}
     </section>
   );
 };
