@@ -5,6 +5,7 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import {
   Select,
   SelectContent,
@@ -296,10 +297,29 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
 
                     {/* Category Badge */}
                     {action.category && (
-                      <Badge className="absolute top-4 right-4 bg-primary/90 pointer-events-none">
+                      <Badge className="absolute top-4 left-4 bg-primary/90 pointer-events-none">
                         {action.category}
                       </Badge>
                     )}
+                    
+                    {/* Favorite Button */}
+                    <div className="absolute top-4 right-4 z-10">
+                      <FavoriteButton 
+                        action={{
+                          id: action.id,
+                          title: action.title,
+                          slug: action.slug,
+                          description: action.description,
+                          category: action.category,
+                          payment_rate: action.payment_rate,
+                          payment_unit: action.payment_unit,
+                          image_url: action.image_url,
+                          video_url: action.video_url,
+                          detail_url: action.detail_url,
+                          type: action.type
+                        }}
+                      />
+                    </div>
 
                     {/* Title */}
                     <Link to={`/action/${action.slug}`} className="absolute bottom-0 left-0 right-0 p-6 text-white">

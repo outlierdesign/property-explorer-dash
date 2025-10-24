@@ -5,6 +5,7 @@ import { ArrowLeft, Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { FavoriteButton } from "@/components/FavoriteButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Footer } from "@/components/Footer";
@@ -142,21 +143,43 @@ const ActionDetail = () => {
           <div className="max-w-7xl mx-auto">
             {/* Title & Category */}
             <div className="mb-8">
-              <Badge variant="secondary" className="mb-4 text-sm px-4 py-1.5">
-                {action.category}
-              </Badge>
-              <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
-                {action.title}
-              </h1>
-              
-              {/* Payment Rate - Prominent Display */}
-              <div className="flex items-baseline gap-2 text-primary">
-                <span className="text-4xl md:text-5xl font-bold">
-                  €{action.payment_rate.toFixed(2)}
-                </span>
-                <span className="text-xl text-muted-foreground">
-                  per {action.payment_unit}
-                </span>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <Badge variant="secondary" className="mb-4 text-sm px-4 py-1.5">
+                    {action.category}
+                  </Badge>
+                  <h1 className="text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight">
+                    {action.title}
+                  </h1>
+                  
+                  {/* Payment Rate - Prominent Display */}
+                  <div className="flex items-baseline gap-2 text-primary">
+                    <span className="text-4xl md:text-5xl font-bold">
+                      €{action.payment_rate.toFixed(2)}
+                    </span>
+                    <span className="text-xl text-muted-foreground">
+                      per {action.payment_unit}
+                    </span>
+                  </div>
+                </div>
+                
+                {/* Favorite Button */}
+                <FavoriteButton 
+                  action={{
+                    id: action.id,
+                    title: action.title,
+                    slug: action.slug,
+                    description: action.description || null,
+                    category: action.category,
+                    payment_rate: action.payment_rate,
+                    payment_unit: action.payment_unit,
+                    image_url: action.image_url || null,
+                    video_url: action.video_url || null,
+                    detail_url: action.detail_url || null,
+                    type: action.type || 'NPI'
+                  }}
+                  className="shrink-0"
+                />
               </div>
             </div>
 
