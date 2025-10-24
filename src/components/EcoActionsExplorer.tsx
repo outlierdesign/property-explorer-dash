@@ -52,6 +52,7 @@ interface EcoAction {
   image_url: string | null;
   detail_url: string | null;
   type: string;
+  video_url: string | null;
 }
 
 interface EcoActionsExplorerProps {
@@ -251,7 +252,22 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
                   className="group overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-elegant cursor-pointer h-full"
                 >
                   <div className="relative h-64 overflow-hidden">
-                    {(action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
+                    {action.video_url ? (
+                      <>
+                        <iframe
+                          src={action.video_url}
+                          className="w-full h-full pointer-events-none"
+                          frameBorder="0"
+                          allow="autoplay; fullscreen; picture-in-picture"
+                          title={action.title}
+                        />
+                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 group-hover:bg-black/20 transition-colors">
+                          <div className="bg-white/90 rounded-full p-6 group-hover:scale-110 transition-transform">
+                            <Play className="h-8 w-8 text-primary" fill="currentColor" />
+                          </div>
+                        </div>
+                      </>
+                    ) : (action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
                       <img
                         src={action.type === "LA" && laImageMap[action.slug] ? laImageMap[action.slug] : action.image_url!}
                         alt={action.title}

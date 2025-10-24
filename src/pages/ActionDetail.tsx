@@ -46,6 +46,7 @@ interface EcoAction {
   image_url?: string;
   detail_url?: string;
   type?: string;
+  video_url?: string;
 }
 
 const ActionDetail = () => {
@@ -162,7 +163,16 @@ const ActionDetail = () => {
             {/* Video/Image Section - Full Width */}
             <div className="mb-8 rounded-2xl overflow-hidden">
               <div className="relative aspect-[16/9] bg-gradient-to-br from-primary/20 to-secondary/20">
-                {(action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
+                {action.video_url ? (
+                  <iframe
+                    src={action.video_url}
+                    className="w-full h-full"
+                    frameBorder="0"
+                    allow="autoplay; fullscreen; picture-in-picture"
+                    allowFullScreen
+                    title={action.title}
+                  />
+                ) : (action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
                   <img 
                     src={action.type === "LA" && laImageMap[action.slug] ? laImageMap[action.slug] : action.image_url!} 
                     alt={action.title}
