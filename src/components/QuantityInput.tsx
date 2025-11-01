@@ -20,7 +20,7 @@ export const QuantityInput = ({ instanceId, paymentRate, paymentUnit }: Quantity
     }
   }, [meters, instanceId]);
 
-  const calculatedTotal = (paymentRate / 100) * meters;
+  const calculatedTotal = paymentRate * meters;
 
   return (
     <div className="space-y-2 p-3 bg-muted/50 rounded-md">

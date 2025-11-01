@@ -124,7 +124,7 @@ const calculateTotal = (action: FavoriteAction['action'], quantities?: FavoriteA
   const baseRate = action.payment_rate || 0;
   
   if (hasMetricQuantity(action) && quantities?.meters) {
-    return (baseRate / 100) * quantities.meters;
+    return baseRate * quantities.meters;
   }
   
   return baseRate;
