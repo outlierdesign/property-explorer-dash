@@ -53,8 +53,8 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
   return (
     <>
       <Drawer open={open} onOpenChange={onOpenChange}>
-        <DrawerContent className="max-h-[85vh]">
-          <DrawerHeader>
+        <DrawerContent className="max-h-[85vh] flex flex-col">
+          <DrawerHeader className="flex-shrink-0">
             <DrawerTitle>My Action Shortlist</DrawerTitle>
             <DrawerDescription>
               {favorites.length === 0 
@@ -64,7 +64,7 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
             </DrawerDescription>
           </DrawerHeader>
 
-          <ScrollArea className="flex-1 px-4">
+          <ScrollArea className="flex-1 px-4 overflow-auto h-[400px]">
             {favorites.length === 0 ? (
               <div className="text-center py-12 text-muted-foreground">
                 <p>No actions added yet.</p>
