@@ -123,7 +123,7 @@ export const useFavorites = () => {
 const calculateTotal = (action: FavoriteAction['action'], quantities?: FavoriteAction['customQuantities']): number => {
   const baseRate = action.payment_rate || 0;
   
-  if (hasFencingComponent(action) && quantities?.meters) {
+  if (hasMetricQuantity(action) && quantities?.meters) {
     return (baseRate / 100) * quantities.meters;
   }
   
@@ -136,4 +136,10 @@ export const hasFencingComponent = (action: { title: string; description: string
          searchText.includes("fence") || 
          searchText.includes("stone wall") ||
          searchText.includes("predator");
+};
+
+export const hasMetricQuantity = (action: { payment_unit: string | null }): boolean => {
+  if (!action.payment_unit) return false;
+  const unit = action.payment_unit.toLowerCase();
+  return unit.includes("m") || unit.includes("metre") || unit.includes("meter");
 };

@@ -1,2 +1,2 @@
 // This file is deprecated - use the context from @/contexts/FavoritesContext instead
-export { useFavorites, hasFencingComponent, type FavoriteAction } from "@/contexts/FavoritesContext";
+export { useFavorites, hasFencingComponent, hasMetricQuantity, type FavoriteAction } from "@/contexts/FavoritesContext";

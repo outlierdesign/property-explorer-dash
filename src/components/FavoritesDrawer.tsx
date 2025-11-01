@@ -1,4 +1,4 @@
-import { useFavorites, hasFencingComponent } from "@/hooks/useFavorites";
+import { useFavorites, hasMetricQuantity } from "@/hooks/useFavorites";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "./ui/drawer";
 import { Button } from "./ui/button";
 import { X, Download, Mail, Trash2 } from "lucide-react";
@@ -108,7 +108,7 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
                         </p>
                       )}
 
-                      {hasFencingComponent(favorite.action) && (
+                      {hasMetricQuantity(favorite.action) && (
                         <QuantityInput
                           instanceId={favorite.instanceId}
                           paymentRate={favorite.action.payment_rate || 0}
