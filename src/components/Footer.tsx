@@ -40,6 +40,7 @@ export const Footer = () => {
             <h3 className="font-semibold mb-4">Programme</h3>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="#" className="hover:text-primary transition-colors">About ACRES CP</a></li>
+              <li><a href="/team" className="hover:text-primary transition-colors">Our Team</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Eligibility</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">How to Apply</a></li>
               <li><a href="#" className="hover:text-primary transition-colors">Contact CP Team</a></li>
