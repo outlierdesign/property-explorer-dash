@@ -23,7 +23,7 @@ export const Hero = () => {
             Rewarding your farming for nature: join the ACRES Co-operation Programme
           </h1>
           <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto mb-8 drop-shadow-lg leading-relaxed">
-            As a farmer in a High Nature Value (HNV) area you're already delivering more than meets the eye. The ACRES Co-operation Programme recognises the value of your land and your efforts: you'll receive support, advice and payments for managing your farm in harmony with nature and the landscape over the next five years. Through tailored score cards, your forage and habitat land will be assessed each year. The higher the score, the greater the payment — all based on your decisions and how you manage your fields. You'll benefit from expert guidance from a local CP team, access to funding for non-productive investments and landscape actions to enhance your farm's habitat value and scores, and a five year commitment offering stability and flexibility. Speak with your approved farm advisor today to check eligibility and prepare for the next tranche of applications.
+            As a farmer in a High Nature Value area, you're already delivering valuable conservation work. The ACRES Co-operation Programme recognises this with support, advice and annual payments based on your farm's ecological score. The higher your score, the greater the reward. Benefit from expert local guidance, funding for habitat enhancements, and a five year commitment offering stability. Speak with your approved farm advisor today to check eligibility.
           </p>
         </div>
         
