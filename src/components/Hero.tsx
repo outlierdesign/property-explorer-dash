@@ -19,14 +19,11 @@ export const Hero = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 py-20">
         <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
-            ACRES Ireland
-            <span className="block bg-gradient-to-r from-accent to-secondary bg-clip-text text-transparent">
-              Non-Productive Investments
-            </span>
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-2xl">
+            Rewarding your farming for nature: join the ACRES Co-operation Programme
           </h1>
-          <p className="text-xl md:text-2xl text-white/90 max-w-3xl mx-auto mb-8 drop-shadow-lg">
-            Explore environmental actions and funding opportunities for sustainable farming. Support biodiversity and habitat conservation.
+          <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto mb-8 drop-shadow-lg leading-relaxed">
+            As a farmer in a High Nature Value (HNV) area you're already delivering more than meets the eye. The ACRES Co-operation Programme recognises the value of your land and your efforts: you'll receive support, advice and payments for managing your farm in harmony with nature and the landscape over the next five years. Through tailored score cards, your forage and habitat land will be assessed each year. The higher the score, the greater the payment — all based on your decisions and how you manage your fields. You'll benefit from expert guidance from a local CP team, access to funding for non-productive investments and landscape actions to enhance your farm's habitat value and scores, and a five year commitment offering stability and flexibility. Speak with your approved farm advisor today to check eligibility and prepare for the next tranche of applications.
           </p>
         </div>
         
