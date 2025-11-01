@@ -3,23 +3,23 @@ import { Leaf, Shield, Heart, Award } from "lucide-react";
 const features = [
   {
     icon: Leaf,
-    title: "100% Verified Eco",
-    description: "Every property meets strict sustainability standards and environmental criteria",
+    title: "Tailored Score Cards",
+    description: "Your forage and habitat land assessed annually with payments based on ecological value",
   },
   {
     icon: Shield,
-    title: "Secure & Trusted",
-    description: "Book with confidence through our secure platform with verified reviews",
+    title: "Expert Local Support",
+    description: "Dedicated CP team providing guidance and advice throughout the five year programme",
   },
   {
     icon: Heart,
-    title: "Support Conservation",
-    description: "10% of every booking goes directly to local environmental initiatives",
+    title: "Funding for Actions",
+    description: "Access to funding for non-productive investments and landscape actions to enhance habitat value",
   },
   {
     icon: Award,
-    title: "Award Winning",
-    description: "Recognized globally for promoting sustainable and responsible tourism",
+    title: "Five Year Commitment",
+    description: "Stability and flexibility with a long term partnership that rewards your conservation efforts",
   },
 ];
 
@@ -29,10 +29,10 @@ export const InfoSection = () => {
       <div className="container mx-auto px-4">
         <div className="text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-4">
-            Why Choose Sustainable Travel?
+            Why Join ACRES Co-operation Programme?
           </h2>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            Travel responsibly while experiencing the world's most beautiful natural environments
+            Recognition, support and rewards for managing your High Nature Value farm in harmony with nature
           </p>
         </div>
         

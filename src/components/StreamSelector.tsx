@@ -11,9 +11,9 @@ export const StreamSelector = ({ selectedStream, onStreamChange }: StreamSelecto
     <div className="w-full bg-gradient-to-br from-background to-muted/30 py-12 border-b">
       <div className="container mx-auto px-4">
         <div className="max-w-4xl mx-auto text-center mb-8">
-          <h2 className="text-3xl font-bold mb-3">Choose Your Conservation Stream</h2>
+          <h2 className="text-3xl font-bold mb-3">Explore ACRES CP Actions</h2>
           <p className="text-muted-foreground">
-            Select the type of environmental actions that best suit your land and conservation goals
+            Select the type of actions available under the Co-operation Programme to enhance your farm's habitat value
           </p>
         </div>
         

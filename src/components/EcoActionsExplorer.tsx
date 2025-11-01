@@ -162,8 +162,8 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
           </h2>
           <p className="text-lg text-muted-foreground mb-6">
             {streamType === "NPI" 
-              ? "Discover environmental initiatives and Non-Productive Investments (NPIs) from the ACRES Ireland program. These actions support biodiversity, water quality, and sustainable farming practices."
-              : "Explore landscape-scale management actions that protect wildlife, control invasive species, restore habitats, and enhance your land's ecological value through targeted conservation activities."
+              ? "Infrastructure and habitat creation actions available through the ACRES Co-operation Programme. These investments enhance your farm's ecological value and contribute to your annual score card assessment."
+              : "Management activities available through the ACRES Co-operation Programme that protect wildlife, control invasive species, restore habitats, and enhance your land's ecological value and score card results."
             }
           </p>
           <div className="flex gap-2">
