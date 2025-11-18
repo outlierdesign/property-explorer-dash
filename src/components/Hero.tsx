@@ -2,7 +2,7 @@ import heroImage from "@/assets/hero-galtee-mountains.jpg";
 
 export const Hero = () => {
   return (
-    <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[50vh] flex items-center justify-center overflow-hidden">
       {/* Background Image with Parallax Effect */}
       <div 
         className="absolute inset-0 z-0"
@@ -17,14 +17,11 @@ export const Hero = () => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-20">
-        <div className="text-center mb-12 animate-fade-in">
+      <div className="relative z-10 container mx-auto px-4 py-8">
+        <div className="text-center mb-8 animate-fade-in">
           <h1 className="text-4xl md:text-6xl font-bold text-white mb-6 drop-shadow-2xl">
-            Rewarding your farming for nature: join the ACRES Co-operation Programme
+            Actions Explorer
           </h1>
-          <p className="text-lg md:text-xl text-white/90 max-w-4xl mx-auto mb-8 drop-shadow-lg leading-relaxed">
-            As a farmer in a High Nature Value area, you're already delivering valuable conservation work. The ACRES Co-operation Programme recognises this with support, advice and annual payments based on your farm's ecological score. The higher your score, the greater the reward. Benefit from expert local guidance, funding for habitat enhancements, and a five year commitment offering stability. Speak with your approved farm advisor today to check eligibility.
-          </p>
         </div>
         
         {/* Stats */}
