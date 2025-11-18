@@ -7,6 +7,7 @@ import { FavoritesProvider } from "@/contexts/FavoritesContext";
 import Index from "./pages/Index";
 import ActionDetail from "./pages/ActionDetail";
 import Team from "./pages/Team";
+import Embed from "./pages/Embed";
 import NotFound from "./pages/NotFound";
 import { FavoritesFloatingButton } from "./components/FavoritesFloatingButton";
 
@@ -24,6 +25,7 @@ const App = () => (
             <Route path="/" element={<Index />} />
             <Route path="/action/:slug" element={<ActionDetail />} />
             <Route path="/team" element={<Team />} />
+            <Route path="/embed" element={<Embed />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
