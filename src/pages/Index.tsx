@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Hero } from "@/components/Hero";
 import { EcoActionsExplorer } from "@/components/EcoActionsExplorer";
-import { StreamSelector } from "@/components/StreamSelector";
 import { InfoSection } from "@/components/InfoSection";
 import { Footer } from "@/components/Footer";
 
@@ -10,10 +9,9 @@ const Index = () => {
 
   return (
     <div className="min-h-screen">
-      <Hero />
-      <StreamSelector 
-        selectedStream={selectedStream} 
-        onStreamChange={setSelectedStream} 
+      <Hero 
+        selectedStream={selectedStream}
+        onStreamChange={setSelectedStream}
       />
       <EcoActionsExplorer streamType={selectedStream} />
       <InfoSection />

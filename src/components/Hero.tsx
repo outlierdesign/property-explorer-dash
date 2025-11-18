@@ -1,8 +1,14 @@
 import heroImage from "@/assets/hero-galtee-mountains.jpg";
+import { StreamSelector } from "@/components/StreamSelector";
 
-export const Hero = () => {
+interface HeroProps {
+  selectedStream: "NPI" | "LA";
+  onStreamChange: (stream: "NPI" | "LA") => void;
+}
+
+export const Hero = ({ selectedStream, onStreamChange }: HeroProps) => {
   return (
-    <section className="relative min-h-[85vh] flex items-center justify-center overflow-hidden">
+    <section className="relative min-h-[60vh] flex items-center justify-center overflow-hidden">
       {/* Background Image with Parallax Effect */}
       <div 
         className="absolute inset-0 z-0"
@@ -17,26 +23,18 @@ export const Hero = () => {
       </div>
       
       {/* Content */}
-      <div className="relative z-10 container mx-auto px-4 py-20">
-        <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 drop-shadow-2xl">
+      <div className="relative z-10 container mx-auto px-4 py-12">
+        <div className="text-center mb-8 animate-fade-in">
+          <h1 className="text-4xl md:text-6xl font-bold text-white mb-8 drop-shadow-2xl">
             Actions Explorer
           </h1>
-        </div>
-        
-        {/* Stats */}
-        <div className="mt-16 grid grid-cols-3 gap-8 max-w-3xl mx-auto">
-          <div className="text-center">
-            <p className="text-4xl font-bold text-white drop-shadow-lg">35+</p>
-            <p className="text-white/80 text-sm mt-1">NPI Actions</p>
-          </div>
-          <div className="text-center">
-            <p className="text-4xl font-bold text-white drop-shadow-lg">€5M+</p>
-            <p className="text-white/80 text-sm mt-1">Available Funding</p>
-          </div>
-          <div className="text-center">
-            <p className="text-4xl font-bold text-white drop-shadow-lg">100%</p>
-            <p className="text-white/80 text-sm mt-1">Verified Schemes</p>
+          
+          {/* Stream Selector integrated into hero */}
+          <div className="max-w-2xl mx-auto">
+            <StreamSelector 
+              selectedStream={selectedStream} 
+              onStreamChange={onStreamChange} 
+            />
           </div>
         </div>
       </div>
