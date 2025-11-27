@@ -8,8 +8,10 @@ import Index from "./pages/Index";
 import ActionDetail from "./pages/ActionDetail";
 import Team from "./pages/Team";
 import Embed from "./pages/Embed";
+import AdminVideos from "./pages/AdminVideos";
 import NotFound from "./pages/NotFound";
 import { FavoritesFloatingButton } from "./components/FavoritesFloatingButton";
+import { OfflineIndicator } from "./components/OfflineIndicator";
 
 const queryClient = new QueryClient();
 
@@ -20,12 +22,14 @@ const App = () => (
         <Toaster />
         <Sonner />
         <BrowserRouter>
+          <OfflineIndicator />
           <FavoritesFloatingButton />
           <Routes>
             <Route path="/" element={<Index />} />
             <Route path="/action/:slug" element={<ActionDetail />} />
             <Route path="/team" element={<Team />} />
             <Route path="/embed" element={<Embed />} />
+            <Route path="/admin/videos" element={<AdminVideos />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>
