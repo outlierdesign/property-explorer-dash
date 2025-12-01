@@ -8,7 +8,7 @@ import Index from "./pages/Index";
 import ActionDetail from "./pages/ActionDetail";
 import Team from "./pages/Team";
 import Embed from "./pages/Embed";
-import AdminVideos from "./pages/AdminVideos";
+import Install from "./pages/Install";
 import NotFound from "./pages/NotFound";
 import { FavoritesFloatingButton } from "./components/FavoritesFloatingButton";
 import { OfflineIndicator } from "./components/OfflineIndicator";
@@ -29,7 +29,7 @@ const App = () => (
             <Route path="/action/:slug" element={<ActionDetail />} />
             <Route path="/team" element={<Team />} />
             <Route path="/embed" element={<Embed />} />
-            <Route path="/admin/videos" element={<AdminVideos />} />
+            <Route path="/install" element={<Install />} />
             {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
             <Route path="*" element={<NotFound />} />
           </Routes>

@@ -1,11 +1,9 @@
-import { useState, useEffect, useCallback } from 'react';
-import { Network, ConnectionStatus, ConnectionType } from '@capacitor/network';
-import { isNativeApp } from '@/services/videoDownloader';
+import { useState, useEffect } from 'react';
 
 export interface NetworkState {
   isOnline: boolean;
   isWifi: boolean;
-  connectionType: ConnectionType | 'unknown';
+  connectionType: 'wifi' | 'cellular' | 'unknown';
 }
 
 export const useNetwork = () => {
@@ -15,58 +13,51 @@ export const useNetwork = () => {
     connectionType: 'unknown'
   });
 
-  const updateNetworkState = useCallback((status: ConnectionStatus) => {
-    setNetworkState({
-      isOnline: status.connected,
-      isWifi: status.connectionType === 'wifi',
-      connectionType: status.connectionType
-    });
-  }, []);
-
   useEffect(() => {
-    // Get initial status
-    const getInitialStatus = async () => {
-      if (isNativeApp()) {
-        const status = await Network.getStatus();
-        updateNetworkState(status);
-      } else {
-        // Web fallback
-        setNetworkState(prev => ({
-          ...prev,
-          isOnline: navigator.onLine
-        }));
+    const updateOnlineStatus = () => {
+      // Try to detect connection type via Network Information API
+      const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+      
+      let connectionType: 'wifi' | 'cellular' | 'unknown' = 'unknown';
+      let isWifi = false;
+
+      if (connection) {
+        const type = connection.effectiveType || connection.type;
+        // Consider 4g and above as potentially wifi, slower as cellular
+        if (type === 'wifi' || type === '4g') {
+          connectionType = 'wifi';
+          isWifi = true;
+        } else if (type === 'cellular' || type === '3g' || type === '2g') {
+          connectionType = 'cellular';
+        }
       }
+
+      setNetworkState({
+        isOnline: navigator.onLine,
+        isWifi,
+        connectionType
+      });
     };
 
-    getInitialStatus();
+    updateOnlineStatus();
 
-    // Listen for changes
-    let listener: any;
-    
-    if (isNativeApp()) {
-      Network.addListener('networkStatusChange', updateNetworkState).then(l => {
-        listener = l;
-      });
-    } else {
-      // Web fallback
-      const handleOnline = () => setNetworkState(prev => ({ ...prev, isOnline: true }));
-      const handleOffline = () => setNetworkState(prev => ({ ...prev, isOnline: false }));
-      
-      window.addEventListener('online', handleOnline);
-      window.addEventListener('offline', handleOffline);
+    window.addEventListener('online', updateOnlineStatus);
+    window.addEventListener('offline', updateOnlineStatus);
 
-      return () => {
-        window.removeEventListener('online', handleOnline);
-        window.removeEventListener('offline', handleOffline);
-      };
+    // Listen for connection changes if available
+    const connection = (navigator as any).connection || (navigator as any).mozConnection || (navigator as any).webkitConnection;
+    if (connection) {
+      connection.addEventListener('change', updateOnlineStatus);
     }
 
     return () => {
-      if (listener) {
-        listener.remove();
+      window.removeEventListener('online', updateOnlineStatus);
+      window.removeEventListener('offline', updateOnlineStatus);
+      if (connection) {
+        connection.removeEventListener('change', updateOnlineStatus);
       }
     };
-  }, [updateNetworkState]);
+  }, []);
 
   return networkState;
 };
