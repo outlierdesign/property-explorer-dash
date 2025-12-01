@@ -15,6 +15,7 @@ interface EcoAction {
   category: string;
   image_url?: string;
   detail_url?: string;
+  type: string;
 }
 
 const extractCategory = (title: string): string => {
@@ -138,6 +139,7 @@ serve(async (req) => {
         category,
         image_url: imageUrl,
         detail_url: detailUrl,
+        type: 'NPI',
       });
     }
     
@@ -156,12 +158,12 @@ serve(async (req) => {
       );
     }
     
-    // Clear existing data
-    console.log('Clearing existing actions...');
+    // Clear existing NPI actions only (preserve LA actions)
+    console.log('Clearing existing NPI actions...');
     const { error: deleteError } = await supabase
       .from('eco_actions')
       .delete()
-      .neq('id', '00000000-0000-0000-0000-000000000000'); // Delete all
+      .eq('type', 'NPI'); // Only delete NPI actions
     
     if (deleteError) {
       console.error('Error clearing actions:', deleteError);
