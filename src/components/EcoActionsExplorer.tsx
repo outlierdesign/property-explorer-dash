@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
-import { Play, Filter, Search } from "lucide-react";
+import { Play, Filter, RefreshCw, Search } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -71,6 +71,7 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
   const [onlineActions, setOnlineActions] = useState<EcoAction[]>([]);
   const [categories, setCategories] = useState<string[]>(["All"]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isPopulating, setIsPopulating] = useState(false);
   const [videoModalOpen, setVideoModalOpen] = useState(false);
   const [selectedVideo, setSelectedVideo] = useState<{ url: string; title: string } | null>(null);
   const { toast } = useToast();
@@ -129,6 +130,42 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
     }
   };
 
+  const populateActions = async () => {
+    try {
+      setIsPopulating(true);
+      toast({
+        title: "Populating database",
+        description: "Fetching latest actions from ACRES Ireland...",
+      });
+
+      const response = await fetch(
+        `https://ewgttimylpcniqpowugd.supabase.co/functions/v1/populate-eco-actions`,
+        { method: 'POST' }
+      );
+
+      const result = await response.json();
+
+      if (result.success) {
+        toast({
+          title: "Success",
+          description: `Added ${result.count} eco actions to database`,
+        });
+        await syncActions();
+        await fetchActions();
+      } else {
+        throw new Error(result.error || 'Failed to populate actions');
+      }
+    } catch (error) {
+      console.error('Error populating actions:', error);
+      toast({
+        title: "Error",
+        description: error instanceof Error ? error.message : "Failed to populate actions",
+        variant: "destructive",
+      });
+    } finally {
+      setIsPopulating(false);
+    }
+  };
 
   const filteredActions = actions.filter((action) => {
     const matchesCategory = selectedCategory === "All" || action.category === selectedCategory;
@@ -161,14 +198,25 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
               : "Management activities available through the ACRES Co-operation Programme that protect wildlife, control invasive species, restore habitats, and enhance your land's ecological value and score card results."
             }
           </p>
-          <Button 
-            variant="outline" 
-            onClick={() => setShowFilters(!showFilters)}
-            className="gap-2"
-          >
-            <Filter className="h-4 w-4" />
-            {showFilters ? "Hide Filters" : "Show Filters"}
-          </Button>
+          <div className="flex gap-2">
+            <Button 
+              variant="outline" 
+              onClick={() => setShowFilters(!showFilters)}
+              className="gap-2"
+            >
+              <Filter className="h-4 w-4" />
+              {showFilters ? "Hide Filters" : "Show Filters"}
+            </Button>
+            <Button 
+              variant="outline"
+              onClick={populateActions}
+              disabled={isPopulating || !isOnline}
+              className="gap-2"
+            >
+              <RefreshCw className={`h-4 w-4 ${isPopulating ? 'animate-spin' : ''}`} />
+              {isPopulating ? "Updating..." : "Update from ACRES"}
+            </Button>
+          </div>
         </div>
 
         {/* Filters */}
