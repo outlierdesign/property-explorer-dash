@@ -6,10 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { FavoriteButton } from "@/components/FavoriteButton";
-import { DownloadButton } from "@/components/DownloadButton";
-import { OfflineBadge } from "@/components/OfflineIndicator";
 import { SyncStatus } from "@/components/SyncStatus";
-import { isNativeApp } from "@/services/videoDownloader";
 import {
   Select,
   SelectContent,
@@ -61,10 +58,6 @@ interface EcoAction {
   type: string;
   video_url: string | null;
   video_url_download?: string | null;
-  video_downloaded?: boolean;
-  video_local_path?: string | null;
-  image_downloaded?: boolean;
-  image_local_path?: string | null;
 }
 
 interface EcoActionsExplorerProps {
@@ -83,7 +76,7 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
   const [selectedVideo, setSelectedVideo] = useState<{ url: string; title: string } | null>(null);
   const { toast } = useToast();
 
-  // Use offline sync for native app
+  // Use offline sync hook
   const { 
     actions: offlineActions, 
     isLoading: offlineLoading, 
@@ -93,16 +86,16 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
     syncActions 
   } = useOfflineSync(streamType);
 
-  // Determine which actions to display
-  const isNative = isNativeApp();
-  const actions = isNative ? offlineActions : onlineActions;
-  const loading = isNative ? offlineLoading : isLoading;
+  // Determine which actions to display (prefer cached for PWA)
+  const actions = offlineActions.length > 0 ? offlineActions : onlineActions;
+  const loading = offlineLoading || isLoading;
 
   useEffect(() => {
-    if (!isNative) {
+    // Always try to fetch if online
+    if (isOnline) {
       fetchActions();
     }
-  }, [streamType, isNative]);
+  }, [streamType, isOnline]);
 
   // Update categories when actions change
   useEffect(() => {
@@ -157,11 +150,8 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
           title: "Success",
           description: `Added ${result.count} eco actions to database`,
         });
-        if (isNative) {
-          await syncActions();
-        } else {
-          await fetchActions();
-        }
+        await syncActions();
+        await fetchActions();
       } else {
         throw new Error(result.error || 'Failed to populate actions');
       }
@@ -185,12 +175,6 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
     return matchesCategory && matchesSearch;
   });
 
-  const handleDownloadComplete = () => {
-    // Refresh to update download status
-    if (isNative) {
-      syncActions();
-    }
-  };
 
   return (
     <section className="w-full py-16 bg-gradient-to-b from-background to-muted/20">
@@ -201,14 +185,12 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
             <h2 className="text-4xl font-bold">
               {streamType === "NPI" ? "Non-Productive Investments" : "Landscape Actions"}
             </h2>
-            {isNative && (
-              <SyncStatus 
-                lastSync={lastSync} 
-                isSyncing={isSyncing} 
-                isOnline={isOnline} 
-                onSync={syncActions} 
-              />
-            )}
+            <SyncStatus 
+              lastSync={lastSync} 
+              isSyncing={isSyncing} 
+              isOnline={isOnline} 
+              onSync={syncActions} 
+            />
           </div>
           <p className="text-lg text-muted-foreground mb-6">
             {streamType === "NPI" 
@@ -228,7 +210,7 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
             <Button 
               variant="outline"
               onClick={populateActions}
-              disabled={isPopulating || (isNative && !isOnline)}
+              disabled={isPopulating || !isOnline}
               className="gap-2"
             >
               <RefreshCw className={`h-4 w-4 ${isPopulating ? 'animate-spin' : ''}`} />
@@ -345,9 +327,6 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
                     )}
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent pointer-events-none" />
 
-                    {/* Offline Badge */}
-                    <OfflineBadge isDownloaded={action.video_downloaded || action.image_downloaded || false} />
-
                     {/* Category Badge */}
                     {action.category && (
                       <Badge className="absolute top-4 left-4 bg-primary/90 pointer-events-none">
@@ -398,25 +377,12 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
                           </div>
                         )}
                         
-                        <div className="flex gap-2">
-                          <Button 
-                            variant="outline" 
-                            className="flex-1 group-hover:bg-primary group-hover:text-white transition-colors"
-                          >
-                            Learn More
-                          </Button>
-                          {isNative && (action.video_url_download || action.image_url) && (
-                            <DownloadButton
-                              actionId={action.id}
-                              actionTitle={action.title}
-                              videoUrl={action.video_url_download}
-                              imageUrl={action.image_url}
-                              isDownloaded={action.video_downloaded || action.image_downloaded || false}
-                              onDownloadComplete={handleDownloadComplete}
-                              compact
-                            />
-                          )}
-                        </div>
+                        <Button 
+                          variant="outline" 
+                          className="w-full group-hover:bg-primary group-hover:text-white transition-colors"
+                        >
+                          Learn More
+                        </Button>
                       </div>
                     </CardContent>
                   </Link>
@@ -429,7 +395,7 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
         {filteredActions.length === 0 && !loading && (
           <div className="text-center py-12">
             <p className="text-lg text-muted-foreground">
-              {isNative && !isOnline 
+              {!isOnline 
                 ? "No cached actions available. Connect to the internet to sync."
                 : "No actions found for the selected category."
               }
