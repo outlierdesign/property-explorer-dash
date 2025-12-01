@@ -158,22 +158,41 @@ serve(async (req) => {
       );
     }
     
-    // Clear existing NPI actions only (preserve LA actions)
-    console.log('Clearing existing NPI actions...');
-    const { error: deleteError } = await supabase
-      .from('eco_actions')
-      .delete()
-      .eq('type', 'NPI'); // Only delete NPI actions
+    // Never delete actions - only insert new ones that don't exist
+    console.log('Checking for existing actions...');
     
-    if (deleteError) {
-      console.error('Error clearing actions:', deleteError);
+    // Get existing action titles to avoid duplicates
+    const { data: existingActions } = await supabase
+      .from('eco_actions')
+      .select('title')
+      .eq('type', 'NPI');
+    
+    const existingTitles = new Set(existingActions?.map(a => a.title) || []);
+    
+    // Filter out actions that already exist
+    const newActions = actions.filter(action => !existingTitles.has(action.title));
+    
+    console.log(`Found ${newActions.length} new actions to add (${actions.length - newActions.length} already exist)`);
+    
+    // Insert only new actions
+    if (newActions.length === 0) {
+      console.log('No new actions to insert');
+      return new Response(
+        JSON.stringify({ 
+          success: true, 
+          count: 0,
+          message: 'All actions already exist in database'
+        }),
+        { 
+          headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
+        }
+      );
     }
     
-    // Insert new actions
     console.log('Inserting new actions...');
     const { data, error: insertError } = await supabase
       .from('eco_actions')
-      .insert(actions)
+      .insert(newActions)
       .select();
     
     if (insertError) {
