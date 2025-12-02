@@ -14,8 +14,9 @@ export const FavoritesFloatingButton = () => {
       <Button
         onClick={() => setDrawerOpen(true)}
         size="lg"
-        className="fixed bottom-6 right-6 z-40 rounded-full shadow-lg hover:shadow-xl transition-all"
+        className="hidden md:flex fixed bottom-6 right-6 z-40 rounded-full shadow-lg hover:shadow-xl transition-all"
         variant={count === 0 ? "outline" : "default"}
+        data-favorites-button
       >
         <div className="relative">
           <Heart className={count > 0 ? "mr-2 h-5 w-5 fill-current" : "mr-2 h-5 w-5"} />

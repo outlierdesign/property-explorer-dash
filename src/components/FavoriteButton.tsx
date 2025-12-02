@@ -42,12 +42,15 @@ export const FavoriteButton = ({ action, className }: FavoriteButtonProps) => {
       variant="ghost"
       size="icon"
       onClick={handleClick}
-      className={cn("hover:scale-110 transition-transform", className)}
+      className={cn(
+        "hover:scale-110 transition-transform h-10 w-10 md:h-9 md:w-9 active:scale-95",
+        className
+      )}
       aria-label={favorited ? "Already in shortlist" : "Add to shortlist"}
     >
       <Heart 
         className={cn(
-          "h-5 w-5 transition-colors",
+          "h-6 w-6 md:h-5 md:w-5 transition-colors",
           favorited ? "fill-current text-primary" : "text-muted-foreground"
         )}
       />

@@ -140,12 +140,12 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
 
 
   return (
-    <section className="w-full py-16 bg-gradient-to-b from-background to-muted/20">
+    <section className="w-full py-8 md:py-16 bg-gradient-to-b from-background to-muted/20">
       <div className="container mx-auto px-4">
         {/* Header */}
-        <div className="max-w-3xl mb-12">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-4xl font-bold">
+        <div className="max-w-3xl mb-8 md:mb-12">
+          <div className="flex items-center justify-between mb-3 md:mb-4">
+            <h2 className="text-2xl md:text-4xl font-bold">
               {streamType === "NPI" ? "Non-Productive Investments" : "Landscape Actions"}
             </h2>
             <SyncStatus 
@@ -155,7 +155,7 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
               onSync={syncActions} 
             />
           </div>
-          <p className="text-lg text-muted-foreground mb-6">
+          <p className="text-sm md:text-lg text-muted-foreground mb-4 md:mb-6">
             {streamType === "NPI" 
               ? "Infrastructure and habitat creation actions available through the ACRES Co-operation Programme. These investments enhance your farm's ecological value and contribute to your annual score card assessment."
               : "Management activities available through the ACRES Co-operation Programme that protect wildlife, control invasive species, restore habitats, and enhance your land's ecological value and score card results."
@@ -215,18 +215,21 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
           </Card>
         )}
 
-        {/* Quick Category Filters */}
-        <div className="flex flex-wrap gap-2 mb-8">
-          {categories.map((cat) => (
-            <Button
-              key={cat}
-              variant={selectedCategory === cat ? "default" : "outline"}
-              size="sm"
-              onClick={() => setSelectedCategory(cat)}
-            >
-              {cat}
-            </Button>
-          ))}
+        {/* Quick Category Filters - Sticky on mobile */}
+        <div className="sticky top-14 md:top-16 z-30 bg-background/95 backdrop-blur-sm py-3 -mx-4 px-4 md:mx-0 md:px-0 md:static mb-4 md:mb-8 border-b md:border-0 border-border">
+          <div className="flex overflow-x-auto gap-2 pb-2 md:pb-0 scrollbar-hide">
+            {categories.map((cat) => (
+              <Button
+                key={cat}
+                variant={selectedCategory === cat ? "default" : "outline"}
+                size="sm"
+                onClick={() => setSelectedCategory(cat)}
+                className="whitespace-nowrap"
+              >
+                {cat}
+              </Button>
+            ))}
+          </div>
         </div>
 
         {/* Actions Grid */}
@@ -235,13 +238,13 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
             <p className="text-lg text-muted-foreground">Loading eco actions...</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
             {filteredActions.map((action) => (
               <div key={action.id}>
                 <Card 
-                  className="group overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-elegant h-full"
+                  className="group overflow-hidden border-border hover:border-primary transition-all duration-300 hover:shadow-elegant h-full active:scale-[0.98]"
                 >
-                  <div className="relative h-64 overflow-hidden">
+                  <div className="relative h-48 md:h-64 overflow-hidden">
                     {action.video_url ? (
                       <div 
                         className="relative w-full h-full cursor-pointer"
@@ -283,13 +286,13 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
 
                     {/* Category Badge */}
                     {action.category && (
-                      <Badge className="absolute top-4 left-4 bg-primary/90 pointer-events-none">
+                      <Badge className="absolute top-3 left-3 md:top-4 md:left-4 bg-primary/90 pointer-events-none text-xs">
                         {action.category}
                       </Badge>
                     )}
                     
-                    {/* Favorite Button */}
-                    <div className="absolute top-4 right-4 z-10">
+                    {/* Favorite Button - Larger tap target on mobile */}
+                    <div className="absolute top-3 right-3 md:top-4 md:right-4 z-10">
                       <FavoriteButton 
                         action={{
                           id: action.id,
@@ -308,23 +311,23 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
                     </div>
 
                     {/* Title */}
-                    <Link to={`/action/${action.slug}`} className="absolute bottom-0 left-0 right-0 p-6 text-white">
-                      <h3 className="text-xl font-bold mb-2">{action.title}</h3>
+                    <Link to={`/action/${action.slug}`} className="absolute bottom-0 left-0 right-0 p-4 md:p-6 text-white">
+                      <h3 className="text-lg md:text-xl font-bold mb-1 md:mb-2">{action.title}</h3>
                       {action.description && (
-                        <p className="text-sm text-white/90 mb-1 line-clamp-2">{action.description}</p>
+                        <p className="text-xs md:text-sm text-white/90 mb-1 line-clamp-2">{action.description}</p>
                       )}
                     </Link>
                   </div>
 
                   <Link to={`/action/${action.slug}`}>
-                    <CardContent className="p-6">
-                      <div className="space-y-4">
+                    <CardContent className="p-4 md:p-6">
+                      <div className="space-y-3 md:space-y-4">
                         {action.payment_rate && (
                           <div>
-                            <p className="text-sm font-medium text-muted-foreground mb-1">
+                            <p className="text-xs md:text-sm font-medium text-muted-foreground mb-1">
                               Payment Rate
                             </p>
-                            <p className="text-lg font-semibold text-primary">
+                            <p className="text-base md:text-lg font-semibold text-primary">
                               €{action.payment_rate.toFixed(2)}
                               {action.payment_unit && ` / ${action.payment_unit}`}
                             </p>
@@ -333,7 +336,7 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
                         
                         <Button 
                           variant="outline" 
-                          className="w-full group-hover:bg-primary group-hover:text-white transition-colors"
+                          className="w-full group-hover:bg-primary group-hover:text-white transition-colors text-sm md:text-base h-9 md:h-10"
                         >
                           Learn More
                         </Button>
