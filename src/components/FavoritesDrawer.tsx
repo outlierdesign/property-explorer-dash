@@ -1,7 +1,7 @@
 import { useFavorites, hasMetricQuantity } from "@/hooks/useFavorites";
 import { Drawer, DrawerClose, DrawerContent, DrawerDescription, DrawerFooter, DrawerHeader, DrawerTitle } from "./ui/drawer";
 import { Button } from "./ui/button";
-import { X, Download, Mail, Trash2 } from "lucide-react";
+import { X, Download, Mail, Trash2, MessageCircle } from "lucide-react";
 import { QuantityInput } from "./QuantityInput";
 import { Badge } from "./ui/badge";
 import { useState } from "react";
@@ -48,6 +48,37 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
         duration: 1500
       });
     }
+  };
+
+  const handleWhatsAppShare = () => {
+    if (favorites.length === 0) {
+      toast({
+        title: "No actions selected",
+        description: "Add some actions to your shortlist first.",
+        variant: "destructive",
+        duration: 1500
+      });
+      return;
+    }
+
+    const message = `*My Eco Action Plan* 🌱
+
+${favorites.map((f, index) => 
+  `${index + 1}. ${f.action.title}\n   €${f.calculatedTotal.toFixed(2)}`
+).join('\n\n')}
+
+*Total Estimate: €${totalEstimate.toFixed(2)}*
+
+Generated via Eco Actions Calculator`;
+
+    const whatsappUrl = `https://wa.me/?text=${encodeURIComponent(message)}`;
+    window.open(whatsappUrl, '_blank');
+    
+    toast({
+      title: "Opening WhatsApp",
+      description: "Share your action plan with colleagues",
+      duration: 1500
+    });
   };
 
   return (
@@ -140,14 +171,18 @@ export const FavoritesDrawer = ({ open, onOpenChange }: FavoritesDrawerProps) =>
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 gap-2">
+                <div className="grid grid-cols-3 gap-2">
                   <Button onClick={handleDownloadPDF} className="w-full">
                     <Download className="mr-2 h-4 w-4" />
-                    Download PDF
+                    PDF
                   </Button>
                   <Button onClick={() => setEmailDialogOpen(true)} variant="secondary" className="w-full">
                     <Mail className="mr-2 h-4 w-4" />
-                    Email Plan
+                    Email
+                  </Button>
+                  <Button onClick={handleWhatsAppShare} variant="secondary" className="w-full">
+                    <MessageCircle className="mr-2 h-4 w-4" />
+                    WhatsApp
                   </Button>
                 </div>
 
