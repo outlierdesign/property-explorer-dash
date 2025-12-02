@@ -143,4 +143,14 @@ All colors MUST be HSL.
   .animate-fade-in {
     animation: fade-in 0.8s ease-out;
   }
+  
+  /* Hide scrollbar but keep functionality */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
 }

@@ -17,7 +17,13 @@ interface EmailPlanDialogProps {
 }
 
 export const EmailPlanDialog = ({ open, onOpenChange, favorites, totalEstimate }: EmailPlanDialogProps) => {
-  const [senderEmail, setSenderEmail] = useState("");
+  // Load sender email from localStorage on mount
+  const [senderEmail, setSenderEmail] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('sender_email') || "";
+    }
+    return "";
+  });
   const [recipientEmail, setRecipientEmail] = useState("");
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
@@ -65,13 +71,15 @@ export const EmailPlanDialog = ({ open, onOpenChange, favorites, totalEstimate }
 
       if (error) throw error;
 
+      // Save sender email to localStorage for future use
+      localStorage.setItem('sender_email', senderEmail);
+
       toast({
         title: "Email sent!",
         description: `Your action plan has been sent to ${recipientEmail}`
       });
       
       onOpenChange(false);
-      setSenderEmail("");
       setRecipientEmail("");
       setMessage("");
     } catch (error: any) {
@@ -105,7 +113,11 @@ export const EmailPlanDialog = ({ open, onOpenChange, favorites, totalEstimate }
               placeholder="your@email.com"
               value={senderEmail}
               onChange={(e) => setSenderEmail(e.target.value)}
+              autoComplete="email"
             />
+            {senderEmail && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(senderEmail)) && (
+              <p className="text-xs text-destructive">Please enter a valid email address</p>
+            )}
           </div>
           
           <div className="space-y-2">
@@ -116,7 +128,11 @@ export const EmailPlanDialog = ({ open, onOpenChange, favorites, totalEstimate }
               placeholder="recipient@email.com"
               value={recipientEmail}
               onChange={(e) => setRecipientEmail(e.target.value)}
+              autoComplete="email"
             />
+            {recipientEmail && !(/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipientEmail)) && (
+              <p className="text-xs text-destructive">Please enter a valid email address</p>
+            )}
           </div>
           
           <div className="space-y-2">
