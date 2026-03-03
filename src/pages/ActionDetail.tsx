@@ -1,7 +1,7 @@
 import { useParams, Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { ArrowLeft, Play } from "lucide-react";
+import { ArrowLeft, Play, Film, FileText, Download } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -9,6 +9,11 @@ import { FavoriteButton } from "@/components/FavoriteButton";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Footer } from "@/components/Footer";
+import { DesktopNav } from "@/components/DesktopNav";
+import { MobileHeader } from "@/components/MobileHeader";
+import { VideoModal } from "@/components/VideoModal";
+import { getVideosForAction, type Video } from "@/data/videoData";
+import { getResourceForAction } from "@/data/resourceData";
 
 // Import LA placeholder images
 import laCorncrakeHabitat from "@/assets/la-corncrake-habitat.jpg";
@@ -55,6 +60,11 @@ const ActionDetail = () => {
   const [action, setAction] = useState<EcoAction | null>(null);
   const [relatedActions, setRelatedActions] = useState<EcoAction[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
+
+  // Get matched videos and resource for this action
+  const matchedVideos = slug ? getVideosForAction(slug) : [];
+  const matchedResource = slug ? getResourceForAction(slug) : undefined;
 
   useEffect(() => {
     const fetchAction = async () => {
@@ -125,9 +135,12 @@ const ActionDetail = () => {
 
   return (
     <div className="min-h-screen bg-background">
+      <DesktopNav />
+      <MobileHeader />
+
       {/* Back Button */}
-      <div className="border-b border-border bg-card/50 backdrop-blur-sm sticky top-0 z-40">
-        <div className="container mx-auto px-4 py-4">
+      <div className="border-b border-border bg-card/50">
+        <div className="container mx-auto px-4 py-3">
           <Link to="/">
             <Button variant="ghost" size="sm">
               <ArrowLeft className="mr-2 h-4 w-4" />
@@ -390,6 +403,92 @@ const ActionDetail = () => {
           </div>
         </div>
       </section>
+
+      {/* Related Videos Section */}
+      {matchedVideos.length > 0 && (
+        <section className="py-12 bg-muted/20 border-t border-border">
+          <div className="container mx-auto px-4">
+            <div className="max-w-7xl mx-auto">
+              <h2 className="text-2xl md:text-3xl font-bold mb-2 flex items-center gap-3">
+                <Film className="h-6 w-6 text-primary" />
+                Related Videos
+              </h2>
+              <p className="text-muted-foreground mb-8">Watch videos related to this action</p>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                {matchedVideos.map((video) => (
+                  <div
+                    key={video.id}
+                    className="group cursor-pointer rounded-xl overflow-hidden border bg-background hover:shadow-lg transition-all"
+                    onClick={() => setSelectedVideo(video)}
+                  >
+                    <div className="relative aspect-video bg-muted">
+                      <img
+                        src={video.thumbnailUrl}
+                        alt={video.title}
+                        className="w-full h-full object-cover"
+                        loading="lazy"
+                      />
+                      <div className="absolute inset-0 bg-black/30 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="w-14 h-14 rounded-full bg-white/90 flex items-center justify-center">
+                          <Play className="w-7 h-7 text-primary ml-1" />
+                        </div>
+                      </div>
+                    </div>
+                    <div className="p-4">
+                      <h3 className="font-semibold text-base mb-1 group-hover:text-primary transition-colors">
+                        {video.title}
+                      </h3>
+                      {video.description && (
+                        <p className="text-sm text-muted-foreground line-clamp-2">
+                          {video.description}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* NPI Resource Download */}
+      {matchedResource && (
+        <section className="py-8 bg-background border-t border-border">
+          <div className="container mx-auto px-4">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex items-center gap-4 p-6 rounded-xl border bg-primary/5">
+                <div className="flex-shrink-0 w-12 h-12 rounded-lg bg-primary/10 flex items-center justify-center">
+                  <FileText className="w-6 h-6 text-primary" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-semibold text-lg">{matchedResource.title}</h3>
+                  <p className="text-sm text-muted-foreground">NPI Resource Guide (PDF)</p>
+                </div>
+                <a
+                  href={matchedResource.pdfUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground font-medium text-sm hover:bg-primary/90 transition-colors"
+                >
+                  <Download className="w-4 h-4" />
+                  Download PDF
+                </a>
+              </div>
+            </div>
+          </div>
+        </section>
+      )}
+
+      {/* Video Modal */}
+      {selectedVideo && (
+        <VideoModal
+          isOpen={!!selectedVideo}
+          onClose={() => setSelectedVideo(null)}
+          videoUrl={selectedVideo.embedUrl}
+          title={selectedVideo.title}
+        />
+      )}
 
       {/* Related Actions */}
       {relatedActions.length > 0 && (
