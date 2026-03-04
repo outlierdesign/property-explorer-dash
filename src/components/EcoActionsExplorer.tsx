@@ -18,6 +18,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import { VideoModal } from "./VideoModal";
 import { useOfflineSync } from "@/hooks/useOfflineSync";
+import { getActionHeroImage } from "@/data/actionImageData";
 
 // Import LA placeholder images
 import laCorncrakeHabitat from "@/assets/la-corncrake-habitat.jpg";
@@ -267,12 +268,22 @@ export const EcoActionsExplorer = ({ streamType = "NPI" }: EcoActionsExplorerPro
                           </div>
                         </div>
                       </div>
+                    ) : getActionHeroImage(action.slug) ? (
+                      <Link to={`/action/${action.slug}`}>
+                        <img
+                          src={getActionHeroImage(action.slug)}
+                          alt={action.title}
+                          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          loading="lazy"
+                        />
+                      </Link>
                     ) : (action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
                       <Link to={`/action/${action.slug}`}>
                         <img
                           src={action.type === "LA" && laImageMap[action.slug] ? laImageMap[action.slug] : action.image_url!}
                           alt={action.title}
                           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+                          loading="lazy"
                         />
                       </Link>
                     ) : (

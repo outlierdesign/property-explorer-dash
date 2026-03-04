@@ -14,6 +14,7 @@ import { MobileHeader } from "@/components/MobileHeader";
 import { VideoModal } from "@/components/VideoModal";
 import { getVideosForAction, type Video } from "@/data/videoData";
 import { getResourceForAction } from "@/data/resourceData";
+import { getActionHeroImage } from "@/data/actionImageData";
 
 // Import LA placeholder images
 import laCorncrakeHabitat from "@/assets/la-corncrake-habitat.jpg";
@@ -62,9 +63,10 @@ const ActionDetail = () => {
   const [loading, setLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
 
-  // Get matched videos and resource for this action
+  // Get matched videos, resource and hero image for this action
   const matchedVideos = slug ? getVideosForAction(slug) : [];
   const matchedResource = slug ? getResourceForAction(slug) : undefined;
+  const heroImage = slug ? getActionHeroImage(slug) : undefined;
 
   useEffect(() => {
     const fetchAction = async () => {
@@ -196,7 +198,7 @@ const ActionDetail = () => {
               </div>
             </div>
 
-            {/* Video/Image Section - Full Width */}
+            {/* Hero Image / Video Section - Full Width */}
             <div className="mb-8 rounded-2xl overflow-hidden">
               <div className="relative aspect-[16/9] bg-gradient-to-br from-primary/20 to-secondary/20">
                 {action.video_url ? (
@@ -208,9 +210,15 @@ const ActionDetail = () => {
                     allowFullScreen
                     title={action.title}
                   />
+                ) : heroImage ? (
+                  <img
+                    src={heroImage}
+                    alt={action.title}
+                    className="w-full h-full object-cover"
+                  />
                 ) : (action.type === "LA" && laImageMap[action.slug]) || action.image_url ? (
-                  <img 
-                    src={action.type === "LA" && laImageMap[action.slug] ? laImageMap[action.slug] : action.image_url!} 
+                  <img
+                    src={action.type === "LA" && laImageMap[action.slug] ? laImageMap[action.slug] : action.image_url!}
                     alt={action.title}
                     className="w-full h-full object-cover"
                   />
@@ -503,11 +511,19 @@ const ActionDetail = () => {
                   <Link to={`/action/${relatedAction.slug}`} key={relatedAction.id} className="group">
                     <Card className="overflow-hidden h-full border-2 hover:border-primary/50 hover:shadow-xl transition-all duration-300">
                       <div className="relative aspect-[4/3] bg-gradient-to-br from-primary/20 to-secondary/20 overflow-hidden">
-                        {(relatedAction.type === "LA" && laImageMap[relatedAction.slug]) || relatedAction.image_url ? (
-                          <img 
-                            src={relatedAction.type === "LA" && laImageMap[relatedAction.slug] ? laImageMap[relatedAction.slug] : relatedAction.image_url!} 
+                        {getActionHeroImage(relatedAction.slug) ? (
+                          <img
+                            src={getActionHeroImage(relatedAction.slug)}
                             alt={relatedAction.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            loading="lazy"
+                          />
+                        ) : (relatedAction.type === "LA" && laImageMap[relatedAction.slug]) || relatedAction.image_url ? (
+                          <img
+                            src={relatedAction.type === "LA" && laImageMap[relatedAction.slug] ? laImageMap[relatedAction.slug] : relatedAction.image_url!}
+                            alt={relatedAction.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                            loading="lazy"
                           />
                         ) : (
                           <div className="flex items-center justify-center h-full">
