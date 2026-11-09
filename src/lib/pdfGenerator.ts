@@ -1,5 +1,4 @@
 import jsPDF from 'jspdf';
-import autoTable from 'jspdf-autotable';
 import { FavoriteAction } from '@/hooks/useFavorites';
 
 export const generatePDF = (favorites: FavoriteAction[], totalEstimate: number) => {
